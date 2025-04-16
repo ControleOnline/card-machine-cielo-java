@@ -23,10 +23,25 @@ android {
         versionCode 1
         versionName "1.0.0"
     }
+    signingConfigs {
+        release {
+            storeFile file(env["MYAPP_UPLOAD_STORE_FILE"])
+            storePassword env["MYAPP_UPLOAD_STORE_PASSWORD"]
+            keyAlias  env["MYAPP_UPLOAD_KEY_ALIAS"]
+            keyPassword env["MYAPP_UPLOAD_KEY_PASSWORD"]
+        }
+        debug {
+            storeFile file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }
@@ -61,7 +76,7 @@ publishing {
             pom {
                 packaging = 'aar'
                 name.set('Cielo POS Library for Android')
-                description.set('An Android library for integrating with Cielo POS devices.')
+                description.set('Uma biblioteca Android para integração com dispositivos Cielo POS.')
                 url.set('https://github.com/ControleOnline/card-machine-cielo-java')
                 licenses {
                     license {
@@ -86,23 +101,11 @@ publishing {
     }
 }
 
-android {
-    signingConfigs {
-        release {
-            storeFile file(env["MYAPP_UPLOAD_STORE_FILE"])
-            storePassword env["MYAPP_UPLOAD_STORE_PASSWORD"]
-            keyAlias  env["MYAPP_UPLOAD_KEY_ALIAS"]
-            keyPassword env["MYAPP_UPLOAD_KEY_PASSWORD"]
-        }
-        debug {
-            storeFile file('debug.keystore')
-            storePassword 'android'
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
-        }
-    }
-    
-}
 signing {
     sign publishing.publications.release
+}
+
+// Adicione esta linha para definir explicitamente a dependência
+tasks.named('signReleasePublication').configure {
+    dependsOn 'bundleReleaseAar'
 }
