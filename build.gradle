@@ -1,5 +1,5 @@
 plugins {
-    id 'com.android.library'
+    id 'com.android.library' version '8.1.0'
     id 'maven-publish'
     id 'signing'
 }
@@ -7,14 +7,12 @@ plugins {
 android {
     compileSdk 34
     namespace 'com.controleonline.pos.cielo'
-
     defaultConfig {
         minSdk 24
         targetSdk 34
         versionCode 1
         versionName "1.0.0"
     }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -25,12 +23,7 @@ android {
 
 dependencies {
     implementation 'androidx.annotation:annotation:1.7.0'
-    // Adicione outras dependências da sua biblioteca aqui, se houver
-}
-
-repositories {
-    mavenCentral()
-    // Removendo a referência a node_modules
+    implementation 'com.facebook.react:react-native:0.72.4@aar'
 }
 
 group = 'com.github.ControleOnline'
@@ -52,32 +45,31 @@ publishing {
             groupId = project.group
             artifactId = 'cielo'
             version = project.version
-            afterEvaluate { from components.release }
+            afterEvaluate {
+                release.artifact("$buildDir/outputs/aar/${project.name}-release.aar")
+            }
             pom {
                 packaging = 'aar'
-                name = 'Cielo POS Library for Android'
-                description = 'An Android library for integrating with Cielo POS devices.'
-                url = 'https://github.com/ControleOnline/card-machine-cielo-java'
-
+                name.set('Cielo POS Library for Android')
+                description.set('An Android library for integrating with Cielo POS devices.')
+                url.set('https://github.com/ControleOnline/card-machine-cielo-java')
                 licenses {
                     license {
-                        name = 'The Apache License, Version 2.0'
-                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        name.set('The Apache License, Version 2.0')
+                        url.set('http://www.apache.org/licenses/LICENSE-2.0.txt')
                     }
                 }
-
                 developers {
                     developer {
-                        id = 'ControleOnline'
-                        name = 'ControleOnline'
-                        email = 'suporte@controleonline.com.br' // Substitua pelo email correto
+                        id.set('ControleOnline')
+                        name.set('ControleOnline')
+                        email.set('suporte@controleonline.com.br')
                     }
                 }
-
                 scm {
-                    connection = 'scm:git:git://github.com/ControleOnline/card-machine-cielo-java.git'
-                    developerConnection = 'scm:git:ssh://github.com:ControleOnline/card-machine-cielo-java.git'
-                    url = 'https://github.com/ControleOnline/card-machine-cielo-java'
+                    connection.set('scm:git:git://github.com/ControleOnline/card-machine-cielo-java.git')
+                    developerConnection.set('scm:git:ssh://github.com:ControleOnline/card-machine-cielo-java.git')
+                    url.set('https://github.com/ControleOnline/card-machine-cielo-java.git')
                 }
             }
         }
